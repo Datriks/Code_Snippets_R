@@ -1,0 +1,24 @@
+install packages("huxtable)
+library(huxtable)
+
+adelie_ht <- adelie %>% 
+  cor_test("bill_length_mm", "body_mass_g", method = "spearman") %>% 
+  as_huxtable() %>% 
+  set_all_padding(row = everywhere, col = everywhere, value = 6) %>% 
+  set_bold(1, everywhere) %>% 
+  set_top_border(1, everywhere, value = 0.8) %>% 
+  set_bottom_border(1, everywhere, value = 0.4) %>% 
+  set_caption("Correlation between Body Mass and Bill Length in Adelie Penguins")
+
+cmat_ht <- cor_reorder(cmat) %>% 
+  as_huxtable() %>% 
+  set_all_padding(row = everywhere, col = everywhere, value = 6) %>% 
+  set_bold(1, everywhere) %>% 
+  set_background_color(evens, everywhere, "grey92") %>% 
+  map_text_color(-1, -1, by_colorspace("red4", "darkgreen")) %>% 
+  set_caption("Correlation Matrix for Pygoscelis Penguins") %>% 
+  set_col_width(everywhere, value = c(.16, .15, .11, .2, .2, .2)) %>% 
+  set_width(1.02) %>% # note how sum of col widths == total table width
+  theme_article() # yes, there are themes!
+
+cmat_ht

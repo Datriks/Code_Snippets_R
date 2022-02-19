@@ -1,0 +1,41 @@
+
+
+```{r}
+col_summary = function(data, col_names, na.rm = TRUE) {
+  data %>% 
+    summarise(across({{col_names }},
+                     list(
+                       min = min,
+                       max = max,
+                       median = median,
+                       mean = mean), na.rm = na.rm,
+                       .names = "{col}_{fn}"
+                     ))
+}
+```
+
+```{r}
+flights_with_airline_names %>% 
+  col_summary(c(air_time, arr_delay))
+
+col_desriptive_stat = function(data, col_names, na.rm = TRUE) {
+  data %>% 
+    summarise(
+      across({{col_names}},
+             list(
+               min = min,
+               max = max,
+               median = median,
+               mean = mean
+             ),
+             na.rm = na.rm,
+             .names = "{col}_{fn}"
+             ))
+}
+
+
+flights_with_airline_names %>% 
+  group_by(carrier) %>% 
+  col_desriptive_stat(
+    c(air_time, arr_delay, dep_time, dep_delay)
+  )

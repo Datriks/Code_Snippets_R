@@ -1,0 +1,61 @@
+library(dlookr)
+# create report for Data Exploration
+airquality %>% 
+  eda_report(
+    target = "Temp",
+    output_format = "html"
+  )
+
+# descriptive statistics with many quantiles 
+airquality %>% 
+  describe() %>% flextable()
+
+# describe becomes more powerful in combination with dplyr
+glimpse(iris)
+
+iris %>% 
+  group_by(Species) %>% 
+  select(Sepal.Length) %>% 
+  describe() %>% 
+  flextable()
+
+iris %>% 
+  group_by(Species) %>% 
+  select(Sepal.Width) %>% 
+  describe() %>% 
+  flextable()
+
+# normality analysis
+iris %>% 
+  normality() %>% flextable()
+
+iris %>% 
+  group_by(Species) %>% 
+  normality() %>% 
+  flextable()
+
+# plot of normality
+airquality %>% 
+  plot_normality()
+
+iris %>% 
+  plot_normality()
+
+# correlation analysis
+airquality %>% 
+  correlate(Ozone) %>% 
+  flextable()
+
+airquality %>% 
+  correlate(Ozone) %>% 
+  flextable()
+
+iris %>% 
+  plot_correlate()
+
+iris %>% 
+  plot_correlate(method = "kendall")
+
+iris %>% 
+  group_by(Species) %>% 
+  plot_correlate(method = "pearson")

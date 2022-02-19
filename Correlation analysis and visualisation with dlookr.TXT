@@ -1,0 +1,18 @@
+# correlation analysis
+airquality %>% 
+  correlate(Ozone) %>% 
+  flextable()
+
+airquality %>% 
+  correlate(Ozone) %>% 
+  flextable()
+
+iris %>% 
+  plot_correlate()
+
+iris %>% 
+  plot_correlate(method = "kendall")
+
+iris %>% 
+  group_by(Species) %>% 
+  plot_correlate(method = "pearson")

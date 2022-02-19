@@ -1,0 +1,11 @@
+d = diamonds %>% 
+  sample_n(1000)
+
+
+d[sample(seq(NROW(d)), 50), "cut"] = NA
+
+d2 = imputate_na(d, cut, price, method = "mice", seed = 999)
+
+plot(d2)
+
+summary(d2)

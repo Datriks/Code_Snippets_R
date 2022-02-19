@@ -1,0 +1,12 @@
+dfFires_gr %>% 
+  ggplot()+ 
+  geom_line(aes(year, dt.early), size = 1.2, color = "#890000")+
+  geom_line(aes(year, dt.late), size = 1.2, color = "#002949")+
+  geom_smooth(method = lm, se =T, aes(year, dt.early), color = "#006450")+
+  geom_smooth(method = lm, se =T, aes(year, dt.late), color = "#006450")+
+  labs(
+    title = "Start of fire by date",
+    x = "Year",
+    y = "Day of Year",
+    caption = "by Paul Juverdeanu"
+  )

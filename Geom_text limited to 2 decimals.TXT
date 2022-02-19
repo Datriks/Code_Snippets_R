@@ -1,0 +1,13 @@
+dt_full %>% 
+  ggplot(aes(year, price_rent))+
+  geom_col(fill = '#002949')+
+  geom_text(aes(label = sprintf("%0.2f", price_rent)),
+            position=position_dodge(width=0.9),
+            vjust = -0.5, size = 3)+
+  labs(
+    title = 'Ratio Price to Rent Values',
+    subtitle = 'Austin Area',
+    caption = 'by Paul Juverdeanu',
+    x = 'Year',
+    y = 'Home Values'
+  )

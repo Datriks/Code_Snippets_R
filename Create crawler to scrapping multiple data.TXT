@@ -1,0 +1,24 @@
+# Part 2 ------------------------------------------------------------------
+# We want to extract the cast of each movie as well
+
+link =  "https://www.imdb.com/search/title/?title_type=feature&genres=adventure&moviemeter=25000,&sort=user_rating,desc"
+page = read_html(link)
+
+# extract a list of links of all pages
+movie_links = page %>% html_nodes(".lister-item-header a") %>% 
+  html_attr('href') %>% paste('https://www.imdb.com/', ., sep = "")
+
+# create a function to crawl through all the links extracted by movie_links
+get_cast = function(movie_link)  {
+  movie_page = read_html(movie_link)
+  movie_cast = movie_page %>% html_nodes(".primary_photo+ td a") %>% 
+    html_text() %>%  paste(collapse = ",")# use collapse to put all in a list
+  return(movie_cast)
+}
+
+# create a crawler to move through each link end extract the cast
+cast = sapply(movie_links, FUN = get_cast, USE.NAMES = F)
+
+movies = data.frame(name, year, rating, synopsis, cast, stringsAsFactors = F)
+
+View(movies)

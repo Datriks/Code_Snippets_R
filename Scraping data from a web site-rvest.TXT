@@ -1,0 +1,36 @@
+library(rvest)
+library(dplyr)
+
+# for this we need the help of SelectorGadget addon chrome/edge
+# create a var named link and a var page that reads that link
+link =  "https://www.imdb.com/search/title/?title_type=feature&genres=adventure&moviemeter=25000,&sort=user_rating,desc"
+page = read_html(link)
+
+# we extract the name feature 
+name = page %>% 
+  html_nodes(".lister-item-header a") %>% 
+  html_text()
+
+name
+# extract the year
+year = page %>% 
+  html_nodes(".text-muted.unbold") %>% 
+  html_text()
+
+# Extract the rating
+rating = page %>% 
+  html_nodes(".ratings-imdb-rating strong") %>% 
+  html_text()
+
+
+# Extract the sinopsys
+synopsis = page %>% 
+  html_nodes(".ratings-bar+ .text-muted") %>% 
+  html_text()
+
+synopsis
+
+# Create a data frame
+movies = tibble(name, year, rating, synopsis)
+
+View(movies)

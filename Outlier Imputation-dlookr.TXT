@@ -1,0 +1,7 @@
+plot(imputate_outlier(diamonds, carat, method = "mean"))
+
+plot(imputate_outlier(diamonds, carat, method = "median"))
+
+plot(imputate_outlier(diamonds, carat, method = "mode"))
+
+plot(imputate_outlier(diamonds, carat, method = "capping"))

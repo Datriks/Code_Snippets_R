@@ -1,0 +1,296 @@
+---
+title: "Diagnose - Explore - Repair"
+output: html_notebook
+---
+
+```{r message=FALSE}
+#install.packages("dlookr")
+#install.packages("flextable")
+library(tidyverse)
+library(dlookr)
+library(flextable)
+```
+
+```{r}
+newtheme <- theme_light() + 
+  theme(plot.title = element_text(color = "#002949", face = 'bold', size =12),
+        plot.subtitle = element_text(color = "#890000", size = 10),
+        plot.caption = element_text(color = '#890000', face = 'italic', size =8),
+        #panel.border = element_rect(color = "#002949", size = 1),
+        #legend.position = c(0.8, 0.2),
+        #legend.text = element_text(colour="blue", size=10, face="bold"),
+        #legend.title = element_text(colour="blue", size=10, face="bold"),
+        legend.position='none',
+        axis.title.x = element_text(colour = "#890000"),
+        axis.title.y = element_text(colour = "#002949"),
+        axis.text.x = element_text(angle = 45, hjust = 1, color = '#890000'),
+        axis.text.y = element_text(angle = 45, hjust = 1, color = '#002949'),
+        axis.line = element_line(color = "#002949", size =1),
+  )
+
+theme_set(newtheme)
+```
+
+## Description of Data
+```{r}
+#library(dlookr)
+diagnose(airquality) %>% flextable()
+
+diagnose_category(diamonds) %>% flextable()
+
+diagnose_numeric(airquality) %>% flextable()
+
+diagnose_outlier(diamonds) %>% flextable()
+```
+```{r}
+airquality %>% 
+  plot_outlier()
+
+```
+
+```{r}
+airquality %>% 
+  plot_na_pareto()
+
+```
+```{r}
+airquality %>% 
+  plot_na_pareto(only_na = T)
+
+airquality %>% 
+  plot_na_pareto(only_na = T, plot = F) %>% 
+  flextable()
+```
+```{r}
+# distribution of missing values by combination of variables
+airquality %>% 
+  plot_na_hclust()
+
+#missing with intersection of variables
+airquality %>% 
+  plot_na_intersect()
+```
+```{r message=FALSE}
+airquality %>% 
+  diagnose_report(output_format = "html")
+```
+
+## Exploration of Data
+
+```{r}
+# descriptive statistics with many quantiles 
+airquality %>% 
+  describe() %>% flextable()
+
+# describe becomes more powerful in combination with dplyr
+glimpse(iris)
+
+iris %>% 
+  group_by(Species) %>% 
+  select(Sepal.Length) %>% 
+  describe() %>% 
+  flextable()
+
+iris %>% 
+  group_by(Species) %>% 
+  select(Sepal.Width) %>% 
+  describe() %>% 
+  flextable()
+```
+```{r}
+# analise normality
+iris %>% 
+  normality() %>% flextable()
+
+iris %>% 
+  group_by(Species) %>% 
+  normality() %>% 
+  flextable()
+```
+```{r}
+# plot of normality
+airquality %>% 
+  plot_normality()
+
+iris %>% 
+  plot_normality()
+```
+```{r}
+# correlation analysis
+airquality %>% 
+  correlate(Ozone) %>% 
+  flextable()
+
+iris %>% 
+  plot_correlate()
+
+iris %>% 
+  plot_correlate(method = "kendall")
+
+iris %>% 
+  group_by(Species) %>% 
+  plot_correlate(method = "pearson")
+
+```
+```{r message=F}
+# create report for Data Exploration
+airquality %>% 
+  eda_report(
+    target = "Temp",
+    output_format = "html"
+  )
+```
+
+## Repair: Impute missing data-Impute Outliers-Categorisation
+
+```{r}
+bla = airquality %>% 
+  imputate_na(Ozone, Temp, method = "mean")
+
+summary(bla)
+
+plot(bla)
+```
+```{r}
+#install.packages("DMwR")
+library(DMwR)
+# using k-nn method of imputation
+plot(imputate_na(airquality, Ozone, Temp, method = "knn"))
+```
+```{r}
+# a more complex approach ov Repair- Imputation
+plot(imputate_na(airquality, Ozone, Temp, method = "mean"))
+
+plot(imputate_na(airquality, Ozone, Temp, method = "median"))
+
+plot(imputate_na(airquality, Ozone, Temp, method = "mode"))
+
+# K-nearest neighbor method of calculating value for imputation; K-NN
+plot(imputate_na(airquality, Ozone, Temp, method = "knn"))
+
+# rpart: Recursive Partition and Regression Trees
+plot(imputate_na(airquality, Ozone, Temp, method = "rpart"))+
+  theme(legend.position = "top")
+
+# mice : Multivariate Imputation by Chained Equation
+airquality %>% 
+  imputate_na(Ozone, Temp, method = "mice", seed = 999) %>% 
+  plot()
+```
+## Categorical Analysis through Imputation
+```{r}
+d = diamonds %>% 
+  sample_n(1000)
+
+
+d[sample(seq(NROW(d)), 50), "cut"] = NA
+
+d2 = imputate_na(d, cut, price, method = "mice", seed = 999)
+
+plot(d2)
+
+summary(d2)
+```
+# Imputation of Outliers
+```{r}
+plot(imputate_outlier(diamonds, carat, method = "mean"))
+
+plot(imputate_outlier(diamonds, carat, method = "median"))
+
+plot(imputate_outlier(diamonds, carat, method = "mode"))
+
+plot(imputate_outlier(diamonds, carat, method = "capping"))
+```
+## Binning
+```{r}
+# quantile - categorises via quantiles
+# equal -categorises to equal segments
+# pretty - categorises into moderately good segments
+# kmeans - via k-means clustering
+# bclust - via bagging - Boostrap Aggregation-machine Learning meta algorithm 
+# design to improve predictive performance
+
+library(DataExplorer)
+#install.packages("classInt")
+library(classInt)
+
+DataExplorer::plot_density(airquality$Ozone)
+
+# with names
+bin = binning(airquality$Ozone, type = "bclust", nbins = 3,
+              labels = c("cat1", "cat2", "cat3"))
+
+plot(bin)
+
+summary(bin) %>% flextable()
+
+# without names
+binning(airquality$Ozone, type = "bclust", nbins = 3)
+
+```
+
+```{r}
+# Analysing using all the methods for categorisation
+plot(binning(airquality$Ozone, type = "quantile", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+plot(binning(airquality$Ozone, type = "equal", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+plot(binning(airquality$Ozone, type = "pretty", nbins = 3))
+
+plot(binning(airquality$Ozone, type = "kmeans", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+
+binner=airquality %>% 
+  mutate(
+    bined_val = binning(airquality$Ozone, type = "quantile", nbins = 3,
+              labels = c("cat1", "cat2", "cat3"))
+  )
+
+plot(binner)
+```
+
+```{r}
+# visualise the values of binning
+airquality %>% 
+  mutate(
+    binned_Ozone = binning(airquality$Ozone, type = "quantile", nbins = 3,
+                           labels = c("cat1", "cat2", "cat3"))
+  ) %>% 
+  head() %>% 
+  flextable()
+```
+# Final Report of Categorisation
+```{r}
+transformation_report(airquality, output_format = "html")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

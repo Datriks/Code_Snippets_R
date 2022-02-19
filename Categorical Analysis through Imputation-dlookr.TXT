@@ -1,0 +1,78 @@
+d = diamonds %>% 
+  sample_n(1000)
+
+
+d[sample(seq(NROW(d)), 50), "cut"] = NA
+
+d2 = imputate_na(d, cut, price, method = "mice", seed = 999)
+
+plot(d2)
+
+summary(d2)
+
+# outliers imputation
+plot(imputate_outlier(diamonds, carat, method = "mean"))
+
+plot(imputate_outlier(diamonds, carat, method = "median"))
+
+plot(imputate_outlier(diamonds, carat, method = "mode"))
+
+plot(imputate_outlier(diamonds, carat, method = "capping"))
+
+## Binning
+
+# quantile - categorises via quantiles
+# equal -categorises to equal segments
+# pretty - categorises into moderately good segments
+# kmeans - via k-means clustering
+# bclust - via bagging - Boostrap Aggregation-machine Learning meta algorithm 
+# design to improve predictive performance
+
+library(DataExplorer)
+#install.packages("classInt")
+library(classInt)
+
+DataExplorer::plot_density(airquality$Ozone)
+
+# with names
+bin = binning(airquality$Ozone, type = "bclust", nbins = 3,
+              labels = c("cat1", "cat2", "cat3"))
+
+plot(bin)
+
+summary(bin) %>% flextable()
+
+# without names
+binning(airquality$Ozone, type = "bclust", nbins = 3)
+
+# Analysing using all the methods for categorisation
+plot(binning(airquality$Ozone, type = "quantile", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+plot(binning(airquality$Ozone, type = "equal", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+plot(binning(airquality$Ozone, type = "pretty", nbins = 3))
+
+plot(binning(airquality$Ozone, type = "kmeans", nbins = 3,
+              labels = c("cat1", "cat2", "cat3")))
+
+
+binner=airquality %>% 
+  mutate(
+    bined_val = binning(airquality$Ozone, type = "quantile", nbins = 3,
+              labels = c("cat1", "cat2", "cat3"))
+  )
+
+plot(binner)
+
+# visualise the values of binning
+airquality %>% 
+  mutate(
+    binned_Ozone = binning(airquality$Ozone, type = "quantile", nbins = 3,
+                           labels = c("cat1", "cat2", "cat3"))
+  ) %>% 
+  head() %>% 
+  flextable()
+
+transformation_report(airquality, output_format = "html")

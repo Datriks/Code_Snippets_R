@@ -1,0 +1,40 @@
+# Download the necessary files --------------------------------------------
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip",
+              destfile = "files",method = "curl", mode = "wb")
+
+# unzip the downloaded file
+myzipfiles = unzip("files")
+myzipfiles
+
+# Reading the files into R
+features = read.table("Sport_Dataset/features.txt", 
+                      col.names = c('serial','functions'))
+
+view(features)
+activities = read.table("Sport_Dataset/activity_labels.txt", 
+                        col.names = c('serial', 'activity'))
+
+# import the test datasets
+x_test = read.table("Sport_Dataset/test/X_test.txt", 
+                    col.names = features$functions)
+
+glimpse(x_test)
+
+y_test = read.table("Sport_Dataset/test/y_test.txt", 
+                    col.names = 'serial')
+
+subject_test = read.table("Sport_Dataset/test/subject_test.txt", 
+                          col.names = 'subject')
+view(subject_test)
+# import train datasets 
+
+x_train = read.table("Sport_Dataset/train/X_train.txt",
+                     col.names = features$functions)
+
+glimpse(x_train)
+
+y_train = read.table("Sport_Dataset/train/y_train.txt", 
+                     col.names = 'serial')
+
+subject_train = read.table("Sport_Dataset/train/subject_train.txt", 
+                           col.names = 'subject')

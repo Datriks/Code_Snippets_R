@@ -1,0 +1,14 @@
+dt_gr1 %>% 
+  ggplot(aes(reorder(metro, -price), price))+
+  geom_violin()+
+  geom_boxplot(fill = 'yellow',width = 0.2,outlier.colour = '#002949', 
+               outlier.shape = 21, outlier.size = 5, outlier.fill = '#890000')+
+  stat_summary(fun.y = mean, geom = 'point', size = 3, color = '#890000')+
+  geom_jitter(aes(color = metro),width = 0.2)+
+  labs(
+    title = "Home price distribution in metro area of Texas",
+    subtitle = '2010 - 2017',
+    caption = 'by Paul Juverdeanu',
+    x = 'Metro Area',
+    y = 'Average Price'
+  )

@@ -1,0 +1,7 @@
+names(analysis) = gsub('Acc','Accelerometer', names(analysis))
+names(analysis) = gsub('tBody', 'time', names(analysis))
+names(analysis) = gsub('fBody', 'frequency', names(analysis))
+names(analysis) = gsub('Gyro', 'Gyroscope', names(analysis))
+names(analysis) = gsub('BodyBody', 'Body', names(analysis))
+names(analysis) = gsub('Mag', 'Magnitude', names(analysis))
+names(analysis) = gsub('serial', 'Activity', names(analysis))

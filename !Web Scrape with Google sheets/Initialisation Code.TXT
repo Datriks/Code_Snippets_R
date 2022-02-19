@@ -1,0 +1,27 @@
+https://www.youtube.com/watch?v=Q5yVoTqD06M
+# this line of code needs to be inserted as follows:
+# open the webpage-select inspect-console-paste the code and hit enter
+
+#Tables: 
+var i = 1; [].forEach.call(document.querySelectorAll('table'), function(x) { console.log(i++, x); });
+
+#Lists: 
+var i = 1; [].forEach.call(document.querySelectorAll('ul,ol'), function(x) { console.log(i++, x); });
+
+
+Practice on this web sites
+
+https://en.wikipedia.org/wiki/List_of_apple_cultivars
+https://en.wikipedia.org/wiki/Lists_of_earthquakes
+https://www.thespruceeats.com/zhajiangmian-chinese-noodle-recipe-4006698
+https://en.wikipedia.org/wiki/Lists_of_earthquakes
+https://en.wikipedia.org/wiki/List_of_apple_cultivars
+
+Command for Scraping Data with Google sheets
+=importhtml()
+=importdata()
+=importfeed()
+=importxml()
+
+copy and paste over as values, convert to text, select column of interest, apply function:
+=REGEXEXTRACT(B3,"\d.?\d?")

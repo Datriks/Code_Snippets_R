@@ -1,0 +1,13 @@
+
+
+flights_with_airline_names %>% 
+  mutate(
+    name = fct_lump(name, n = 5)
+  ) %>% 
+  count(name) %>% 
+  mutate(
+    name = fct_reorder(name, n)
+  ) %>% 
+  ggplot(aes(name, n))+
+  geom_col()+
+  coord_flip()

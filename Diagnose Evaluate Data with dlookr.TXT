@@ -1,0 +1,35 @@
+#library(dlookr)
+
+airquality %>% 
+  diagnose_report(output_format = "html")
+
+diagnose(airquality) %>% flextable()
+
+diagnose_category(diamonds) %>% flextable()
+
+diagnose_numeric(airquality) %>% flextable()
+
+diagnose_outlier(diamonds) %>% flextable()
+
+
+airquality %>% 
+  plot_outlier()
+
+airquality %>% 
+  plot_na_pareto()
+
+airquality %>% 
+  plot_na_pareto(only_na = T)
+
+airquality %>% 
+  plot_na_pareto(only_na = T, plot = F) %>% 
+  flextable()
+
+# distribution of missing values by combination of variables
+airquality %>% 
+  plot_na_hclust()
+
+#missing with intersection of variables
+airquality %>% 
+  plot_na_intersect()
+

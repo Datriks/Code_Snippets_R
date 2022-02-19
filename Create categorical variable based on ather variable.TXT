@@ -1,0 +1,14 @@
+analysis = analysis %>% 
+  mutate(serial = ifelse(serial == 1, 'walking', 
+                         ifelse(serial == 2, 'walking_upstairs',
+                                ifelse(serial == 3, 'walking_downstairs',
+                                       ifelse(serial == 4, 'sitting',
+                                              ifelse(serial == 5, 'standing', 'laying'))))))
+
+# view(analysis)
+# walking = analysis$serial[analysis$serial == 1]
+# walking_upstairs = analysis$serial[analysis$serial == 2]
+# walking_downstairs = analysis$serial[analysis$serial == 3]
+# sitting = analysis$serial[analysis$serial == 4]
+# standing = analysis$serial[analysis$serial == 5]
+# laying = analysis$serial[analysis$serial == 6]

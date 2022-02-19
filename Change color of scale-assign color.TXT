@@ -1,0 +1,12 @@
+dfFires_cause %>% 
+  ggplot(aes(year, log(ta), color = cause))+
+  geom_point()+
+  geom_smooth(method = lm, se =F)+
+  facet_wrap(~ cause)+
+  labs(
+    title = 'Total Acres Burned by cause',
+    x = 'Year',
+    y = 'Log of total acres burned',
+    caption = 'by Paul Juverdeanu'
+  )+
+  scale_color_manual(values = c('#890000','#002949'))
